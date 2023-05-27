@@ -36,23 +36,9 @@ touch WORKSPACE  # This tells Bazel this is the top of the repo.
 
 Now open `vim` (or install and run your favorite `$EDITOR`) and create these two files:
 
-```c++
-// hello_world.cc
-#include <iostream>
+https://github.com/rpwoodbu/bazel_demo/blob/c5ebcb8adee3bf31e41b0e0610a8a57d89759342/hello_world.cc#L1-L7
 
-int main() {
-  std::cout << "Hello, Bazel world!\n";
-  return 0;
-}
-```
-
-```starlark
-# BUILD.bazel
-cc_binary(
-    name = "hello_world",
-    srcs = ["hello_world.cc"],
-)
-```
+https://github.com/rpwoodbu/bazel_demo/blob/c5ebcb8adee3bf31e41b0e0610a8a57d89759342/BUILD.bazel#L1-L5
 
 You're done! You can build and run your code:
 ```shell
@@ -73,24 +59,9 @@ cd src/main/java/com/example
 
 Create these two files:
 
-```java
-// HelloWorld.java
-package com.example;
+https://github.com/rpwoodbu/bazel_demo/blob/c5ebcb8adee3bf31e41b0e0610a8a57d89759342/src/main/java/com/example/HelloWorld.java#L1-L8
 
-class HelloWorld {
-  public static void main(String[] args) {
-    System.out.println("Hello, Bazel world!");
-  }
-}
-```
-
-```starlark
-# BUILD.bazel
-java_binary(
-    name = "HelloWorld",
-    srcs = ["HelloWorld.java"],
-)
-```
+https://github.com/rpwoodbu/bazel_demo/blob/c5ebcb8adee3bf31e41b0e0610a8a57d89759342/src/main/java/com/example/BUILD.bazel#L1-L5
 
 You're done! You can build and run your code:
 ```shell
@@ -98,9 +69,7 @@ bazel run //src/main/java/com/example:HelloWorld --java_runtime_version=remotejd
 ```
 
 If you'd like not to have to use that flag all the time (and I know you don't), create a file at the top of the repo (next to `WORKSPACE`) called `.bazelrc`, and place this line in it:
-```
-build --java_runtime_version=remotejdk_11
-```
+https://github.com/rpwoodbu/bazel_demo/blob/c5ebcb8adee3bf31e41b0e0610a8a57d89759342/.bazelrc#L1
 
 Now you're _really_ done! You can build and run your code:
 ```shell
@@ -124,60 +93,10 @@ bazel clean  # Be sure it must rebuild everything.
 ### C++
 
 Edit the (empty) `WORKSPACE` file and place this in it:
-```starlark
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
-BAZEL_TOOLCHAIN_TAG = "0.7.2"
-BAZEL_TOOLCHAIN_SHA = "f7aa8e59c9d3cafde6edb372d9bd25fb4ee7293ab20b916d867cd0baaa642529"
-
-http_archive(
-    name = "com_grail_bazel_toolchain",
-    sha256 = BAZEL_TOOLCHAIN_SHA,
-    strip_prefix = "bazel-toolchain-{tag}".format(tag = BAZEL_TOOLCHAIN_TAG),
-    canonical_id = BAZEL_TOOLCHAIN_TAG,
-    url = "https://github.com/grailbio/bazel-toolchain/archive/refs/tags/{tag}.tar.gz".format(tag = BAZEL_TOOLCHAIN_TAG),
-)
-
-load("@com_grail_bazel_toolchain//toolchain:deps.bzl", "bazel_toolchain_dependencies")
-
-bazel_toolchain_dependencies()
-
-# This sysroot is used by github.com/vsco/bazel-toolchains.
-http_archive(
-    name = "org_chromium_sysroot_linux_x64",
-    build_file_content = """
-filegroup(
-  name = "sysroot",
-  srcs = glob(["*/**"]),
-  visibility = ["//visibility:public"],
-)
-""",
-    sha256 = "84656a6df544ecef62169cfe3ab6e41bb4346a62d3ba2a045dc5a0a2ecea94a3",
-    urls = ["https://commondatastorage.googleapis.com/chrome-linux-sysroot/toolchain/2202c161310ffde63729f29d27fe7bb24a0bc540/debian_stretch_amd64_sysroot.tar.xz"],
-)
-
-load("@com_grail_bazel_toolchain//toolchain:rules.bzl", "llvm_toolchain")
-
-llvm_toolchain(
-    name = "llvm_toolchain",
-    llvm_version = "14.0.0",
-    sysroot = {
-        "linux-x86_64": "@org_chromium_sysroot_linux_x64//:sysroot",
-    },    
-)
-
-load("@llvm_toolchain//:toolchains.bzl", "llvm_register_toolchains")
-
-llvm_register_toolchains()
-```
+https://github.com/rpwoodbu/bazel_demo/blob/c5ebcb8adee3bf31e41b0e0610a8a57d89759342/WORKSPACE#L1-L44
 
 Edit the `.bazelrc` file (or create it if you didn't), and place this in it:
-```
-# Don't even look for a local toolchain.
-build --repo_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
-
-build --incompatible_enable_cc_toolchain_resolution
-```
+https://github.com/rpwoodbu/bazel_demo/blob/c5ebcb8adee3bf31e41b0e0610a8a57d89759342/.bazelrc#L3-L6
 
 Now do `bazel run` as before, and see it automatically download everything you need!
 
