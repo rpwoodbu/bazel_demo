@@ -36,15 +36,7 @@ touch WORKSPACE  # This tells Bazel this is the top of the repo.
 
 Now open `vim` (or install and run your favorite `$EDITOR`) and create these two files:
 
-```c++
-// hello_world.cc
-#include <iostream>
-
-int main() {
-  std::cout << "Hello, Bazel world!\n";
-  return 0;
-}
-```
+https://github.com/rpwoodbu/bazel_demo/blob/c5ebcb8adee3bf31e41b0e0610a8a57d89759342/hello_world.cc
 
 ```starlark
 # BUILD.bazel
