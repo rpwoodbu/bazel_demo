@@ -1,0 +1,5 @@
+# BUILD.bazel
+java_binary(
+    name = "HelloWorld",
+    srcs = ["HelloWorld.java"],
+)
