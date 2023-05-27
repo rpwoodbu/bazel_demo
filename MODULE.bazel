@@ -1,0 +1,14 @@
+bazel_dep(name = "com_grail_bazel_toolchain")
+git_override(
+    module_name = "com_grail_bazel_toolchain",
+    remote = "https://github.com/rpwoodbu/bazel-toolchain.git",
+    commit = "e95ecd16577df0ca1a03c78f33f1e9a34d4235da",
+)
+
+toolchain = use_extension("@com_grail_bazel_toolchain//toolchain:extensions.bzl", "toolchain")
+toolchain.llvm(
+    llvm_version = "14.0.0",
+    sysroot = {
+        "linux-x86_64": "@@org_chromium_sysroot_linux_x64//:sysroot",
+    },    
+)
