@@ -2,6 +2,8 @@
 
 It's fast and easy to start a new project with Bazel. But did you know it's also easy for your new project to be _fully hermetic_, such that the toolchains themselves are fully specified in your source tree?
 
+Let's prove it by doing "Hello, World" in a stripped-down container. No toolchains installed.
+
 ## Container setup
 
 ```shell
@@ -13,23 +15,24 @@ Inside the container:
 apt update && apt install -y wget vim
 ```
 
-Note that we didn't install Bazel. We'll instead install [Bazelisk]([url](https://github.com/bazelbuild/bazelisk)), a transparent wrapper around Bazel which will load whatever version is specified in `.bazelversion`, or the latest released version if that isn't present. That way we can express the whole toolchain, including Bazel itself, within the source tree.
+Note that **we didn't even install Bazel**. We'll instead install [Bazelisk]([url](https://github.com/bazelbuild/bazelisk)), a transparent wrapper around Bazel which will load whatever version is specified in `.bazelversion`, or the latest released version if that isn't present. That way we can express the whole toolchain, including Bazel itself, within the source tree.
 ```shell
 wget https://github.com/bazelbuild/bazelisk/releases/download/v1.28.1/bazelisk-amd64.deb
 dpkg -i bazelisk-amd64.deb
 ```
 
-## Create the source tree
+Now create the directory for the source tree and change into it:
 
 ```shell
 mkdir hello_world
 cd hello_world
-touch MODULE.bazel  # This tells Bazel this is the top of the repo.
 ```
+
+At this point, skip to the section for the language you care about. Or do them all! They're easy.
 
 ## C++
 
-Now open `vim` (or install and run your favorite `$EDITOR`), and edit `MODULE.bazel`. Add the dependencies for the C++ toolchain and ruleset, and register the toolchain:
+Open `vim` (or install and run your favorite `$EDITOR`), and edit `MODULE.bazel`. Add the dependencies for the C++ toolchain and ruleset, and register the toolchain:
 
 https://github.com/rpwoodbu/bazel_demo/blob/27dfdc36cf3f60f78ce5b965ff912e9010083db7/MODULE.bazel#L1-L4
 
@@ -85,3 +88,9 @@ bazel run //src/main/java/com/example:HelloWorld
 ```shell
 bazel run :HelloWorld
 ```
+
+## Further reading
+
+See the documentation for the ruleset for any language to learn more about how to interface with their ecosystem. You can find all the rulesets and much more at the [Bazel Central Registry](https://registry.bazel.build/).
+
+Of course, you can find much more at https://bazel.build/.
