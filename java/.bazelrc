@@ -1,0 +1,11 @@
+# `.bazelrc` provides Bazel flags that will be used implicitly in this repo.
+
+# Use a remotely-fetched hermetic JDK. The precise version is defined in
+# `rules_java`.
+build --java_runtime_version=remotejdk_21
+
+# Unset JAVA_HOME, to ensure the hermetic JDK above is used.
+build --action_env=JAVA_HOME
+
+# Don't look for a local C++ toolchain.
+build --repo_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1

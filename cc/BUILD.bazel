@@ -1,0 +1,42 @@
+# Load the CC rules that we will use from the ruleset that we specified in
+# `MODULE.bazel`.
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library", "cc_test")
+
+# Run this:
+#   bazel run :hello_world
+cc_binary(
+    name = "hello_world",
+    srcs = ["hello_world.cc"],
+    deps = [
+        # Depends on Pugixml, an external "foreign" (non-Bazel) library in an
+        # external repo, hence the `@` sign.
+        "@pugixml",
+        # Also depends on a small library, defined below.
+        ":demo_absl",
+    ],
+)
+
+# Small library to demonstrate external dependencies and unit testing.
+cc_library(
+    name = "demo_absl",
+    srcs = ["demo_absl.cc"],
+    hdrs = ["demo_absl.h"],
+    deps = [
+        # Depend on Abseil target providing absl::StrFormat().
+        "@abseil-cpp//absl/strings:str_format",
+    ],
+)
+
+# Test for the small library. Run this:
+#   bazel test :demo_absl_test
+cc_test(
+    name = "demo_absl_test",
+    srcs = ["demo_absl_test.cc"],
+    deps = [
+        # Depend on `googletest`. This target includes `main()`, so we don't
+        # have to define an entrypoint.
+        "@googletest//:gtest_main",
+        # Depend on the code under test.
+        ":demo_absl",
+    ],
+)

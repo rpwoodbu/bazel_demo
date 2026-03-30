@@ -1,0 +1,16 @@
+# Load the Java rules that we will use from the ruleset that we specified in
+# `MODULE.bazel`.
+load("@rules_java//java:defs.bzl", "java_test")
+
+# Run this:
+#   bazel test //src/test/java/com/example:DemoGuavaTest
+# ...or, if you're in the directory with this BUILD file, use the short form:
+#   bazel test :DemoGuavaTest
+java_test(
+    name = "DemoGuavaTest",
+    srcs = ["DemoGuavaTest.java"],
+    deps = [
+        # Depend on the code under test.
+        "//src/main/java/com/example:DemoGuava",
+    ],
+)

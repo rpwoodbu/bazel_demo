@@ -1,0 +1,12 @@
+# `.bazelrc` provides Bazel flags that will be used implicitly in this repo.
+
+# Don't even look for a local toolchain.
+build --repo_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
+
+# Workaround for bad interaction between `@llvm` and `@rules_foreign_cc` whereby
+# the hermetic build of `make`, when running `configure`, fails to discover
+# several typedefs and defines them, causing compilation errors.
+build --host_action_env=ac_cv_type_gid_t=yes
+build --host_action_env=ac_cv_type_pid_t=yes
+build --host_action_env=ac_cv_type_ssize_t=yes
+build --host_action_env=ac_cv_type_uid_t=yes

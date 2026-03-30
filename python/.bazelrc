@@ -1,0 +1,9 @@
+# `.bazelrc` provides Bazel flags that will be used implicitly in this repo.
+
+# Don't even look for a local toolchain. This is needed even if not building C++
+# targets, as Bazel may still try to discover the locally-installed CC toolchain
+# and fail the build if none exists.
+build --repo_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
+
+# Do not require a locally-installed Python when `bazel run`-ing Python targets.
+build --@rules_python//python/config_settings:bootstrap_impl=script

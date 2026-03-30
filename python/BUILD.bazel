@@ -1,0 +1,48 @@
+# Load the Python rules that we will use from the ruleset that we specified in
+# `MODULE.bazel`.
+load("@rules_python//python:defs.bzl", "py_binary", "py_library", "py_test")
+load("@rules_python//python:pip.bzl", "compile_pip_requirements")
+
+# Run this:
+#   bazel run :hello_world
+py_binary(
+    name = "hello_world",
+    srcs = ["hello_world.py"],
+    deps = [
+        # Depend on the small library, defined below.
+        ":demo_cowsay",
+    ],
+)
+
+# Small library to demonstrate external dependencies and unit testing.
+py_library(
+    name = "demo_cowsay",
+    srcs = ["demo_cowsay.py"],
+    deps = [
+        # The target name of the wheel is just the name of the wheel underneath
+        # the `@pip` repo.
+        "@pip//cowsay",
+    ],
+)
+
+# Test for the small library. Run this:
+#   bazel test :demo_cowsay_test
+py_test(
+    name = "demo_cowsay_test",
+    srcs = ["demo_cowsay_test.py"],
+    deps = [
+        # Depend on the code under test.
+        ":demo_cowsay",
+    ],
+)
+
+# Uses `pip` to read `requirements.in` and generate the lockfile.
+# (There is experimental support for `uv`:
+#   https://rules-python.readthedocs.io/en/latest/api/rules_python/python/uv/lock.html)
+# To update the lockfile, run:
+#   bazel run :requirements.update
+compile_pip_requirements(
+    name = "requirements",
+    src = "requirements.in",
+    requirements_txt = "requirements_lock.txt",
+)

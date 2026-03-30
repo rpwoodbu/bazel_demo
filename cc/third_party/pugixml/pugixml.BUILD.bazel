@@ -1,0 +1,31 @@
+# This BUILD file is included from `pugixml.MODULE.bazel` in the
+# `http_archive()` repo rule. It will be placed into the `pugixml` "external
+# repo". Targets in this BUILD file are referenced by prefixing `@pugixml//` to
+# their target names.
+
+# Load the `cmake` rule from the `rules_foreign_cc` ruleset that we specified in
+# `MODULE.bazel`.
+load("@rules_foreign_cc//foreign_cc:defs.bzl", "cmake")
+
+# Use the `cmake` rule to build Pugixml.
+cmake(
+    # Naming the target after the package (i.e. directory) allows us to use a
+    # shorthand target label when referring to this target. Instead of:
+    #   @pugixml//:pugixml
+    # ...we can just say:
+    #   @pugixml
+    name = "pugixml",
+    lib_source = ":all_srcs",
+    out_static_libs = ["libpugixml.a"],
+    # By default, targets are "private", meaning they are not visible outside of
+    # the Bazel package (i.e. BUILD file) in which they are defined. Make this
+    # target public so any package may depend on it.
+    visibility = ["//visibility:public"],
+)
+
+# The `cmake` rule's `lib_source` attribute expects a single target containing
+# all the sources. We use the built-in `filegroup()` rule to create that target.
+filegroup(
+    name = "all_srcs",
+    srcs = glob(["**"]),
+)

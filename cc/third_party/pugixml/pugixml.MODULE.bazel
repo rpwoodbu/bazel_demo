@@ -1,0 +1,21 @@
+# This file is included from the main `MODULE.bazel` file, in order to keep that
+# file short and focussed.
+
+# We need to use this "repo rule" to bring in a source archive from
+# the Internet. `@bazel_tools` is a built-in "external Bazel repo".
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+# Bring in the source archive for Pugixml, and use it as the basis of an
+# "external Bazel repo" called `@pugixml`.
+http_archive(
+    name = "pugixml",
+    # This BUILD file is placed at the top of the constructed external repo.
+    build_file = "//third_party/pugixml:pugixml.BUILD.bazel",
+    urls = ["https://github.com/zeux/pugixml/releases/download/v1.15/pugixml-1.15.tar.gz"],
+    # We want to strip this path prefix from the archive so that we just get the
+    # source tree.
+    strip_prefix = "pugixml-1.15",
+    # This is the hash of the archive file. Bazel validates this, ensuring that
+    # constructing this external repo is deterministic and reproducible.
+    sha256 = "655ade57fa703fb421c2eb9a0113b5064bddb145d415dd1f88c79353d90d511a",
+)
