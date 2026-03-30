@@ -1,0 +1,35 @@
+# Load the Rust rules that we will use from the ruleset that we specified in
+# `MODULE.bazel`.
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library", "rust_test")
+
+# Run this:
+#   bazel run :hello_world
+rust_binary(
+    name = "hello_world",
+    srcs = ["hello_world.rs"],
+    deps = [
+        # Depend on the small library, defined below.
+        ":demo_serde",
+    ],
+)
+
+# Small library to demonstrate external dependencies and unit testing.
+rust_library(
+    name = "demo_serde",
+    srcs = ["demo_serde.rs"],
+    deps = [
+        ## The target name of the crate is just the name of the crate underneath
+        ## the `@crates` repo.
+        "@crates//:serde_json",
+    ],
+)
+
+# Test for the small library. Run this:
+#   bazel test :demo_cowsay_test
+rust_test(
+    name = "demo_serde_test",
+    # The tests embedded with the code under test. But Bazel needs to have a
+    # separate test target. So `rust_test()` takes a `crate` argument which
+    # points to the library which needs its tests run.
+    crate = ":demo_serde",
+)
