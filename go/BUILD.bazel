@@ -1,0 +1,41 @@
+# Load the Go rules that we will use from the ruleset that we specified in
+# `MODULE.bazel`.
+load("@rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
+
+# Run this:
+#   bazel run :hello_world
+go_binary(
+    name = "hello_world",
+    srcs = ["hello_world.go"],
+    # Go is a little different: Libraries within the same package need to be
+    # "embedded" into binaries. `deps` is still used for dependencies from other
+    # packages or modules.
+    embed = [
+        # Depend on the small library, defined below.
+        ":demo_gjson",
+    ],
+)
+
+# Small library to demonstrate external dependencies and unit testing.
+go_library(
+    name = "demo_gjson",
+    srcs = ["demo_gjson.go"],
+    deps = [
+        # External modules are Bazel external repos named by the reversed domain
+        # name, then the remainder of the module name, with all separators
+        # replaced with underscores. The package name then follows in the same
+        # manner as Bazel packages, with slashes for separators.
+        "@com_github_tidwall_gjson//:gjson",
+    ],
+)
+
+# Test for the small library. Run this:
+#   bazel test :demo_gjson_test
+go_test(
+    name = "demo_gjson_test",
+    srcs = ["demo_gjson_test.go"],
+    embed = [
+        # Depend on the code under test.
+        ":demo_gjson",
+    ],
+)
